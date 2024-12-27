@@ -5,6 +5,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#define MAX_STEPS 500
 #define ROWS 20
 #define COLUMNS 40
 #define SPAWN_RATE 0.25
@@ -97,11 +98,13 @@ uint8_t **malloc_Grid(int rows, int columns) {
   return grid;
 }
 
-int run_GameState(uint8_t **grid) {
-  while (1) {
+int run_GameState(uint8_t **grid, int max_steps) {
+  int steps = 0;
+  while (steps < max_steps) {
     update_Grid(grid);
     print_Grid(grid);
-    usleep(200 * 1000); // (ms * 1000) = microsends
+    usleep(200 * 1000); // (ms * 1000) = microsecs
+    steps++;
   }
   return 1;
 }
@@ -114,5 +117,5 @@ int main() {
 
   random_Grid(grid);
 
-  run_GameState(grid);
+  run_GameState(grid, MAX_STEPS);
 }
