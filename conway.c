@@ -23,33 +23,32 @@ int print_Grid(uint8_t **grid) {
   return 0;
 }
 
-int count_Neighbors(uint8_t **grid, int x, int y) {
-  int count = 0;
-
+int count_Neighbors(uint8_t **grid, int x, int y, int offset_index, int count) {
   int offsets[8][2] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1},
                        {0, 1},   {1, -1}, {1, 0},  {1, 1}};
 
-  for (int i = 0; i < 8; i++) {
-    int neighbor_x = x + offsets[i][0];
-    int neighbor_y = y + offsets[i][1];
+  if (offset_index >= 8) {
+    return count;
+  }
 
-    if (neighbor_x < 0 || neighbor_x > ROWS - 1 || neighbor_y < 0 ||
-        neighbor_y > COLUMNS - 1) {
-      continue;
-    }
+  int neighbor_x = x + offsets[offset_index][0];
+  int neighbor_y = y + offsets[offset_index][1];
 
+  if (neighbor_x >= 0 && neighbor_x < ROWS && neighbor_y >= 0 &&
+      neighbor_y < COLUMNS) {
     if (grid[neighbor_x][neighbor_y] == 1) {
       count++;
     }
   }
-  return count;
+
+  return count_Neighbors(grid, x, y, offset_index + 1, count);
 }
 
 void update_Grid(uint8_t **grid) {
 
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLUMNS; j++) {
-      int neighbors_Count = count_Neighbors(grid, i, j);
+      int neighbors_Count = count_Neighbors(grid, i, j, 0, 0);
       if (grid[i][j] == 1) {
         if (neighbors_Count < 2) {
           grid[i][j] = 0;
@@ -74,7 +73,7 @@ void random_Grid(uint8_t **grid) {
 
   for (int i = 0; i < ROWS; i++) {
     for (int j = 0; j < COLUMNS; j++) {
-        grid[i][j] = generate_Random_Bit(SPAWN_RATE);
+      grid[i][j] = generate_Random_Bit(SPAWN_RATE);
     }
   }
 }
