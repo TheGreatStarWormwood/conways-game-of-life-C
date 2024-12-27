@@ -100,11 +100,17 @@ uint8_t **malloc_Grid(int rows, int columns) {
 
 int run_GameState(uint8_t **grid, int max_steps) {
   int steps = 0;
+  int count_100_steps = 0; // variable to reach the assignment requirements, increments by 1 at each 100 steps crossed
+
   while (steps < max_steps) {
     update_Grid(grid);
     print_Grid(grid);
-    usleep(200 * 1000); // (ms * 1000) = microsecs
+    usleep(100 * 1000); // (ms * 1000) = microsecs
     steps++;
+    if(steps % 100 == 0){
+      printf("crossed step:%d\n", steps);
+      count_100_steps++;
+    }
   }
   return 1;
 }
